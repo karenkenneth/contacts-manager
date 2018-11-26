@@ -18,12 +18,12 @@ public class Input {
     }
 
     public Boolean yesNO(){
-        return this.sc.nextLine().equals("yes");
+        return this.sc.nextLine().startsWith("y");
     }
 
     public Boolean yesNO(String prompt){
         System.out.println(prompt);
-        return this.sc.nextLine().equals("yes");
+        return this.sc.nextLine().startsWith("y");
     }
 
     public Integer getInt(){

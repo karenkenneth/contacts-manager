@@ -20,18 +20,18 @@ public class contactsManager {
             int userInput = input.getInt(1,5);
             continueLoop = userInteraction(userInput);
         }while (continueLoop);
-        System.out.println("Thanks for using this");
+        System.out.println("Thanks for using our Contact Manager. Have a great day!");
     }
 
     public static boolean userInteraction(int userInput){
         if (userInput == 1){
-            retriveContact();
+            continueRetrievingContact();
             return true;
         }else if(userInput == 2){
             createDirectory();
             return true;
         }else if (userInput == 3){
-            searchContact();
+            newSearchContact();
             return true;
         }else if(userInput == 4){
             removeContact();
@@ -72,7 +72,7 @@ public class contactsManager {
         }
         String contactToRemove = "";
         for (String contact : removeList){
-            if (contact.startsWith(contactToDelete)){
+            if (contact.toLowerCase().startsWith(contactToDelete.toLowerCase())){
                 contactToRemove = contact;
             }
         }
@@ -122,10 +122,19 @@ public class contactsManager {
             e.printStackTrace();
         }
         for (String line : lines){
-            if (line.startsWith(searchedName)){
+            if (line.toLowerCase().startsWith(searchedName.toLowerCase())){
                 System.out.println(line);
             }
         }
+    }
+
+    public static void newSearchContact(){
+        Input input = new Input();
+        boolean newSearch = false;
+        do {
+            searchContact();
+            newSearch = input.yesNO("Do you want to exit search? [Yes or No]");
+        }while (!newSearch);
     }
 
 
@@ -141,4 +150,13 @@ public class contactsManager {
             System.out.println(line);
         }
     }
+    public static void continueRetrievingContact(){
+        boolean continueLooking = false;
+        Input input = new Input();
+        do {
+            retriveContact();
+            continueLooking = input.yesNO("Do you want to continue? [Yes or No]");
+        } while (!continueLooking);
+    }
+
 }
