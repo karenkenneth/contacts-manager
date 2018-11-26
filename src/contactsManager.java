@@ -13,6 +13,7 @@ public class contactsManager {
     }
 
     public static void mainMenu(){
+        System.out.println("Welcome to our contact manager!!!!");
         Input input = new Input();
         Boolean continueLoop = true;
         do {
@@ -33,7 +34,7 @@ public class contactsManager {
         }else if (userInput == 3){
             newSearchContact();
             return true;
-        }else if(userInput == 4){
+        }else if(userInput == 5){
             removeContact();
             return true;
         }else {
@@ -45,15 +46,15 @@ public class contactsManager {
         System.out.println("1. View contacts.\n");
         System.out.println("2. Add a new contact.\n");
         System.out.println("3. Search a contact by name.\n");
-        System.out.println("4. Delete an existing contact.\n");
-        System.out.println("5. Exit.\n");
+        System.out.println("4. Search a contact by Phone Number.\n");
+        System.out.println("5. Delete an existing contact.\n");
+        System.out.println("6. Exit.\n");
         System.out.println("Enter an option (1, 2, 3, 4 or 5):\n");
     }
 
     public static void displayContacts(){
         System.out.println("Name | Phone number\n");
         System.out.println("---------------\n");
-        retriveContact();
     }
 
     public static void removeContact(){
@@ -88,14 +89,33 @@ public class contactsManager {
         Input input = new Input();
         String firstName = input.getString("Please Enter Contacts first name");
         String  lastName = input.getString("Please Enter Contacts last name");
-        int telephoneNumberFirstDigit = input.getInt("Please enter contacts telephone number first three digits");
-        int telephoneNumberSecondDigit = input.getInt("Please enter contacts telephone number second three digits");
-        int telephoneNumberThirdDigit = input.getInt("Please enter contacts telephone number final four digits");
-        addContact(firstName + " " +  lastName + " | " +
-                telephoneNumberFirstDigit + "-" + telephoneNumberSecondDigit + "-" + telephoneNumberThirdDigit);
+        boolean isItInternational = input.yesNO("Is this number international?");
+        if (!isItInternational){
+            String amountOfNumbers = input.getString("How many digits are in this number?");
+            if (amountOfNumbers.equals("7")){
+                int telephoneNumberSecondDigit = input.getInt("Please enter contacts telephone number first three digits");
+                int telephoneNumberThirdDigit = input.getInt("Please enter contacts telephone number final four digits");
+                addContact(firstName + " " +  lastName + " | " +
+                        telephoneNumberSecondDigit + "-" + telephoneNumberThirdDigit);
+            }else if (amountOfNumbers.equals("10")){
+                int telephoneNumberFirstDigit = input.getInt("Please enter contacts telephone number first three digits");
+                int telephoneNumberSecondDigit = input.getInt("Please enter contacts telephone number second three digits");
+                int telephoneNumberThirdDigit = input.getInt("Please enter contacts telephone number final four digits");
+                addContact(firstName + " " +  lastName + " | " +
+                        telephoneNumberFirstDigit + "-" + telephoneNumberSecondDigit + "-" + telephoneNumberThirdDigit);
+            }else {
+                System.out.println("Please enter a valid number of numbers \nreinitializing creator");
+                createDirectory();
+            }
+        } else {
+            System.out.println("Entering International Mode...");
+            String internationalNumber = input.getString("Please enter internationl number\nCaution: Saftey filters have been removed.");
+            addContact(firstName + " " +  lastName + " | " + internationalNumber);
+        }
     }
 
     public static void addContact(String addInfo){
+        Input input = new Input();
         Path filePath = Paths.get("src/contacts.txt");
         List<String> addedList = new ArrayList<>();
         try {
@@ -103,7 +123,17 @@ public class contactsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        addedList.add(addInfo);
+        for (String contact : addedList){
+            if (contact.contains(addInfo)){
+                boolean duplicate = input.yesNO("Entry is already present. Do you want to continue [y/n]?");
+                if (!duplicate){
+                    createDirectory();
+                }else {
+                    addedList.add(addInfo);
+                }
+                input.getString();
+            }
+        }
         try {
             Files.write(Paths.get("src/contacts.txt"), addedList);
         } catch (IOException e) {
@@ -121,6 +151,7 @@ public class contactsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        displayContacts();
         for (String line : lines){
             if (line.toLowerCase().startsWith(searchedName.toLowerCase())){
                 System.out.println(line);
@@ -146,10 +177,12 @@ public class contactsManager {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        displayContacts();
         for (String line : lines){
             System.out.println(line);
         }
     }
+
     public static void continueRetrievingContact(){
         boolean continueLooking = false;
         Input input = new Input();
