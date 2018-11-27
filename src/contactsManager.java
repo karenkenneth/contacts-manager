@@ -18,7 +18,7 @@ public class contactsManager {
         Boolean continueLoop = true;
         do {
             options();
-            int userInput = input.getInt(1,5);
+            int userInput = input.getInt(1,6);
             continueLoop = userInteraction(userInput);
         }while (continueLoop);
         System.out.println("Thanks for using our Contact Manager. Have a great day!");
@@ -93,14 +93,14 @@ public class contactsManager {
         if (!isItInternational){
             String amountOfNumbers = input.getString("How many digits are in this number?");
             if (amountOfNumbers.equals("7")){
-                int telephoneNumberSecondDigit = input.getInt("Please enter contacts telephone number first three digits");
-                int telephoneNumberThirdDigit = input.getInt("Please enter contacts telephone number final four digits");
+                int telephoneNumberSecondDigit = input.getInt(100, 999,"Please enter contacts telephone number first three digits");
+                int telephoneNumberThirdDigit = input.getInt(1000,9999,"Please enter contacts telephone number final four digits");
                 addContact(firstName + " " +  lastName + " | " +
                         telephoneNumberSecondDigit + "-" + telephoneNumberThirdDigit);
             }else if (amountOfNumbers.equals("10")){
-                int telephoneNumberFirstDigit = input.getInt("Please enter contacts telephone number first three digits");
-                int telephoneNumberSecondDigit = input.getInt("Please enter contacts telephone number second three digits");
-                int telephoneNumberThirdDigit = input.getInt("Please enter contacts telephone number final four digits");
+                int telephoneNumberFirstDigit = input.getInt(100,999,"Please enter contacts telephone number first three digits");
+                int telephoneNumberSecondDigit = input.getInt(100,999,"Please enter contacts telephone number second three digits");
+                int telephoneNumberThirdDigit = input.getInt(1000,9999,"Please enter contacts telephone number final four digits");
                 addContact(firstName + " " +  lastName + " | " +
                         telephoneNumberFirstDigit + "-" + telephoneNumberSecondDigit + "-" + telephoneNumberThirdDigit);
             }else {
@@ -126,14 +126,13 @@ public class contactsManager {
         for (String contact : addedList){
             if (contact.contains(addInfo)){
                 boolean duplicate = input.yesNO("Entry is already present. Do you want to continue [y/n]?");
-                if (!duplicate){
+                if (!duplicate) {
                     createDirectory();
-                }else {
-                    addedList.add(addInfo);
                 }
                 input.getString();
             }
         }
+        addedList.add(addInfo);
         try {
             Files.write(Paths.get("src/contacts.txt"), addedList);
         } catch (IOException e) {
