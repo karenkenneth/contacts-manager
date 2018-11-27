@@ -34,6 +34,9 @@ public class contactsManager {
         }else if (userInput == 3){
             newSearchContact();
             return true;
+        }else if(userInput == 4){
+            newSearchPhoneNumber();
+            return true;
         }else if(userInput == 5){
             removeContact();
             return true;
@@ -51,6 +54,7 @@ public class contactsManager {
         System.out.println("6. Exit.\n");
         System.out.println("Enter an option (1, 2, 3, 4 or 5):\n");
     }
+
 
     public static void displayContacts(){
         System.out.println("Name | Phone number\n");
@@ -167,6 +171,32 @@ public class contactsManager {
         }while (!newSearch);
     }
 
+    public static void newSearchPhoneNumber(){
+        Input input = new Input();
+        boolean newSearch = false;
+        do {
+            newSearchPhoneNumber();
+            newSearch = input.yesNO("Do you want to exit search? [Yes or No]");
+        }while (!newSearch);
+    }
+
+    public static void searchNumber(){
+        Input input = new Input();
+        String searchedNumber = input.getString("Enter the number which you'd like to search.");
+        Path filePath = Paths.get("src/contacts.txt");
+        List<String> lines = new ArrayList<>();
+        try {
+            lines = Files.readAllLines(filePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        displayContacts();
+        for (String line : lines){
+            if (line.toLowerCase().endsWith(searchedNumber)){
+                System.out.println(line);
+            }
+        }
+    }
 
     public static void retriveContact() {
         Path filePath = Paths.get("src/contacts.txt");
